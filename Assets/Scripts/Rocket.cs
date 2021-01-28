@@ -72,6 +72,9 @@ public class Rocket : MonoBehaviour
             case "Obstacles":
                 Debug.Log(collision.gameObject.name + " You died");
                 break;
+            case "Finish":
+                Debug.Log(collision.gameObject.name + " You won!");
+                break;
 
             default:
                 break;
