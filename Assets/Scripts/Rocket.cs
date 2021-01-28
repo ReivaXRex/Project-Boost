@@ -5,47 +5,76 @@ using UnityEngine;
 public class Rocket : MonoBehaviour
 {
     Rigidbody rb;
-   // bool isFlying;
     AudioSource thrustAudio;
 
-    [SerializeField] int thrustPower = 1;
+    [SerializeField] int thrustPower;
+    [SerializeField] int rotateThrustPower;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         thrustAudio = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        ProcessInput();
+        Thrust();
+        Rotate();
     }
 
-    private void ProcessInput()
+    private void Thrust()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rb.AddForce(Vector3.up);
-            if (!thrustAudio.isPlaying)
+            rb.AddRelativeForce(Vector3.up * thrustPower);
+            
+            if (!thrustAudio.isPlaying) // Prevent clip from layering.
             {
                 thrustAudio.Play();
             }
         }
+
         else
         {
             thrustAudio.Stop();
-        }
+        }      
+    }
 
+    private void Rotate()
+    {
+        rb.freezeRotation = true; // take manual control of rotation.
+       
+        float rotation = rotateThrustPower * Time.deltaTime;
+        
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.forward * thrustPower * Time.deltaTime);
+         
+            transform.Rotate(Vector3.forward * rotation);
         }
 
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(-Vector3.forward * thrustPower * Time.deltaTime);
-        }    
+            transform.Rotate(-Vector3.forward * rotation);
+        }
+
+        rb.freezeRotation = false; // resume physics control of rotation.
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "Friendly":
+                Debug.Log(collision.gameObject.name);
+                break;
+            case "Obstacles":
+                Debug.Log(collision.gameObject.name + " You died");
+                break;
+
+            default:
+                break;
+        }
     }
 }
