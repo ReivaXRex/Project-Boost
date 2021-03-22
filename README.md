@@ -11,7 +11,7 @@ Topics, Concepts and Skills Covered:
 - Audio Clips, Sources & Listeners
 - SerializeField Attribute
 - Collisions
-- Prefabs
+- Create and Manipulate Prefabs
 - Level Loading and Scene Mangagement 
 - Using Invoke()
-- Particle Effect System Basics
+- Basic Particle Effects
